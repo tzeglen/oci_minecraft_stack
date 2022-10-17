@@ -1,0 +1,74 @@
+# Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+  title: "Create a Minecraft Server in Oracle Cloud Infrastructure"
+  stackDescription: "Create a Minecraft Server in Oracle Cloud Infrastructure using Ampere A1 shape"
+  schemaVersion: 1.1.0
+  locale: “en"
+  
+  variableGroups:
+  - title: "Required Inputs"
+    variables:
+    - compartment_ocid
+    - region
+    - ssh_authorized_keys
+    - availability_domain
+    - ocpu_count
+    - memory_count
+    - InstanceImageOCID
+   
+  variables:
+    compartment_ocid:
+      type: oci:identity:compartment:id
+      visible: true
+      required: true
+      title: Compartment
+      description: Select compartment
+
+    region:
+      type: oci:identity:region:name
+      dependsOn:
+        compartmentId: ${compartment_ocid}
+      required: true
+      visible: false
+      title: Region
+      description: Select region
+
+    
+    ssh_authorized_keys:
+      type: oci:core:ssh:publickey
+      additionalProps:
+        allowMultiple: true
+      required: false
+      default: [""]
+      pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+      title: SSH Public Key
+      description: Paste or insert SSH public key
+
+    availability_domain:
+      type: oci:identity:availabilitydomain:name
+      dependsOn:
+        compartmentId: ${compartment_ocid}
+      required: true
+      title: Availability Domain
+
+    ocpu_count:
+      type: integer
+      title: Server OCPUs
+      description: Number of OCPUs for Minecraft server instance
+      minimum: 1
+      maximum: 4
+      default: 2
+
+    memory_count:
+      type: integer
+      title: Server Memory
+      description: Memory in GB for Minecraft server instance
+      minimum: 6
+      maximum: 24
+      default: 12     
+
+    InstanceImageOCID:
+      type: string
+      visible: false
+      
